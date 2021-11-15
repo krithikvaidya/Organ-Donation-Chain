@@ -21,40 +21,14 @@
       "required": false,
       "description": "The class identifier for this type"
     },
-    "adharID": {
+    "donorId": {
       "type": "string",
       "id": true,
       "description": "The instance identifier for this type",
       "required": true
     },
-    "firstName": {
-      "type": "string",
-      "required": true
-    },
-    "lastName": {
-      "type": "string",
-      "required": true
-    },
-    "age": {
-      "type": "number",
-      "required": true
-    },
-    "address": {
-      "type": "string",
-      "required": true
-    },
-    "contact": {
-      "type": "string",
-      "required": true
-    },
-    "email": {
-      "type": "string",
-      "required": true
-    },
     "name": {
-      "type": [
-        "string"
-      ],
+      "type": "string",
       "enum": [
         "EYE",
         "KIDNEY",

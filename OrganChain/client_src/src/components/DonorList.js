@@ -11,8 +11,10 @@ class DonorList extends Component{
     render () {
         return(
             <li className="collection-item" onClick={this.function = () => {
-                console.log("clicked : " + this.state.item.adharID);
-            }}> Donor ID : {this.state.item.adharID} <br />Name : {this.state.item.firstName + " " + this.state.item.lastName}</li>
+                console.log("clicked : " + this.state.item.donorId);
+            }}> Donor ID: {this.state.item.donorId} <br />Organ: {this.state.item.name}
+            <br/>Recipient Assigned: {this.state.item.recipient_assigned === true ? "true" : "false"}</li>
+            // {this.state.item.firstName + " " + this.state.item.lastName}</li>
         )
     }
 }

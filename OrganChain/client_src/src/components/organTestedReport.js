@@ -3,14 +3,19 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {Navigation} from './NavHospital';
 import image2base64 from 'image-to-base64';
+import OrganList from './OrganList';
 
 class organTestedReport extends Component{
 
-    state = { selectedFile: null }
+    state = { selectedFile: null, organs: [] }
 
     fileChangedHandler = event => {
-        this.setState({ selectedFile: event.target.files[0] })
+        this.setState({ selectedFile: event.target.value })
       }
+    
+    componentWillMount() {
+      this.getOrgans();
+    }
 
     updateOrgan(updateOrgan) {
       axios.request({
@@ -19,43 +24,53 @@ class organTestedReport extends Component{
           data: updateOrgan
         }).then(response => {
           console.log("done");
-        }).catch(err => console.log(err));
-  }
-
-    getOrgan(){
-      axios.get('http://localhost:3000/api/Organ?Organ_findById='+this.refs.organ_id.value)
-        .then(response => {
-          response.Tested.value=true;
-          response.testTime.value=new Date().now();
-          this.updateOrgantime(response);
-      })
-      .catch(err => console.log(err));
-    }
-
-    updateOrgantime(organDetails) {
-      axios.request({
-          method:'put',
-          url:'http://localhost:3000/api/Organ?Organ_replaceById='+this.refs.organ_id.value,
-          data: organDetails
-        }).then(response => {
-          console.log("done");
+          this.props.history.push('/showProspectiveRecipients');
         }).catch(err => console.log(err));
   }
 
     onSubmit(e){
+
         const updateOrgan = {
             "$class": "org.organ.net.organTestedReportPrepared",
             hash: btoa(this.state.selectedFile),
-            organ: "resource:org.organ.net.Organ#"+this.refs.organ_id.value,
-            donor: "resource:org.organ.net.Donor#"+this.refs.donor_id.value
+            url: this.state.selectedFile,
+            location: "loc",
+            age: parseInt(this.refs.age.value),
+            sex: this.refs.sex.value,
+            bloodGroup: this.refs.bloodGroup.value,
+            dimensions: this.refs.dimensions.value,
+            transferred_organ: false,
+            organ: "resource:org.organ.net.Organ#"+this.state.organs[0].organId,
+            donor: "resource:org.organ.net.Donor#"+localStorage.ptspotter_donorId
         }
+
+        localStorage.setItem("organId", this.state.organs[0].organId);
+
+        console.log(this.state.organs[0])
 
         this.updateOrgan(updateOrgan);  
        // this.getOrgan();     
-        this.refs.donor_id.value="";
-        this.refs.organ_id.value="";
         e.preventDefault();
     }
+
+    getOrgans(){
+      axios.get('http://localhost:3000/api/Organ?access+token='+localStorage.ptspotter_accessToken)
+        .then(response => {
+          var organList = [];
+          console.log("response: ")
+          console.log(response)
+          organList = response.data.filter((organ) => {
+            return organ.donor === "resource:org.organ.net.Donor#" + localStorage.ptspotter_donorId;
+          })
+
+          this.setState({organs: organList}, () => {
+
+          })
+      })
+      .catch(err => console.log(err));
+    }
+
+
 
     render() {
 
@@ -65,23 +80,48 @@ class organTestedReport extends Component{
              
              <Navigation/>
             </div>
+            <div>
+            <div className="Nav">
+                    <Navigation/>
+            </div>
+                      
+            
+                      
+            </div>
             <div className="inlogin">
 
+            <div>
+                <h1>
+                Donor Report
+                </h1>
+                <p>
+                Please enter donor's medical and physiological details:
+                </p>
+            </div>
+
                 <form onSubmit={this.onSubmit.bind(this)} action="#">
+                   <div className="input-field">
+                       <input type="text" name="age" ref="age" />
+                       <label htmlFor="age">Age</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="bloodGroup" ref="bloodGroup" />
+                       <label htmlFor="bloodGroup">Blood Group</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="sex" ref="sex" />
+                       <label htmlFor="sex">Sex</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="dimensions" ref="dimensions" />
+                       <label htmlFor="dimensions">Dimensions</label>
+                   </div>
                     <div className="input-field">
-                        <input type="text" name="donor_id" ref="donor_id"/>
-                        <label htmlFor="donor_id">Donor ID</label>
-                    </div>
-                    <div className="input-field">
-                        <input type="text" name="organ_id" ref="organ_id"/>
-                        <label htmlFor="organ_id">Organ ID</label>
+                      <input type="text" name="image" ref="image" onChange={this.fileChangedHandler.bind(this)} />
+                      <label htmlFor="image">Donor Report URL</label>
                     </div>
 
-                    <div style={{textAlign:"left"}}>
-                    <input type="file" onChange={this.fileChangedHandler.bind(this)} ref="sfile" />
-                    </div>
-
-                    <br /><input type="submit" value="Invoke Transaction" className="btn"/>
+                    <br /><input type="submit" value="Submit Donor Report" className="btn"/>
                 </form>
               </div>
             </div>

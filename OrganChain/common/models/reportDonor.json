@@ -31,6 +31,30 @@
       "type": "string",
       "required": true
     },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "location": {
+      "type": "string",
+      "required": true
+    },
+    "age": {
+      "type": "number",
+      "required": true
+    },
+    "bloodGroup": {
+      "type": "string",
+      "required": true
+    },
+    "sex": {
+      "type": "string",
+      "required": true
+    },
+    "dimensions": {
+      "type": "string",
+      "required": true
+    },
     "donor": {
       "type": "any",
       "description": "The identifier of an instance of donor",

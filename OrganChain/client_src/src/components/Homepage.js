@@ -7,7 +7,6 @@ class Homepage extends Component{
     render() {
       return (
         <div>
-        <ParticleComponent />
           <div className="Nav">
             <Navigation/>
              
@@ -17,17 +16,18 @@ class Homepage extends Component{
         style={{
           position: "absolute",
           top: '40%',
-          left: '37%',
+          left: '30%',
           color: '#ccc',
           fontFamily: "Arial Black",
         }}
         >
-        <h1>Organ Donation Chain</h1>
+        <h1>Blockchain based Secure Organ Donation</h1>
         </div>
       
         <div  style={{
           position: "absolute",
           top: "50%",
+          left: "5%",
           color: '#ccc',
           fontFamily: "Palatino",
           textAlign: "center",
@@ -35,12 +35,12 @@ class Homepage extends Component{
           
         }} >
        <div className="text">
-       <h5 > With the introduction of Blockchain Technology in Organ Transplant chain, we aim to introduce a system
-           which would offer transparency, immutability, tamper-proof and secure transactions. The journey of each Organ, from donor to the 
-           recipient would be tracked down and Blockchain would ensure no information is altered by the participants and no organs are sold
-            to illegal markets. The authenticity of each organ could be proved with records in the ledger of concerning parties.
-            
-         </h5>
+       <h3 > 
+            An open, transparent approach to the problem of ensuring fair organ donation. Uses
+            a permissioned blockchain system, where hospitals are the only ones authorized to
+            add donors and recipients, and perform organ transfers. All the activity is immutably
+            recorded on the ledger and can be viewed by any member of the general public.
+         </h3>
        </div>
          </div>
          </div>

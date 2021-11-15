@@ -26,11 +26,11 @@ class Patients extends Component{
             var donorList = [];
 
             donorList = response.data.filter(function(i) {
-                return i.hospital === "resource:org.organ.net.Hospital#"+localStorage.ptspotter_hospitalId;
+                return (i.hospital === "resource:org.organ.net.Hospital#"+localStorage.ptspotter_hospitalId);
             });
 
             this.setState({donors: donorList}, () => {
-
+              console.log(donorList)
             })
         })
         .catch(err => console.log(err));
@@ -43,11 +43,11 @@ class Patients extends Component{
             var recipientList = [];
 
             recipientList = response.data.filter(function(i) {
-                return i.hospital === "resource:org.organ.net.Hospital#"+localStorage.ptspotter_hospitalId;
+                return (i.hospital === "resource:org.organ.net.Hospital#"+localStorage.ptspotter_hospitalId);
             });
 
             this.setState({recipients: recipientList}, () => {
-
+              console.log(recipientList)
             })
         })
         .catch(err => console.log(err));
@@ -59,13 +59,13 @@ class Patients extends Component{
     render() {
         const donorList = this.state.donors.map((donor, i) => {
             return(
-              <DonorList key={donor.adharID} item={donor} />
+              <DonorList key={donor.donorId} item={donor} />
             )
           })
 
           const recipientList = this.state.recipients.map((recipient, i) => {
             return(
-              <RecipientList key={recipient.adharID} item={recipient} />
+              <RecipientList key={recipient.recipientId} item={recipient} />
             )
           })
 
@@ -77,7 +77,7 @@ class Patients extends Component{
               </div>
                <div className = "patient">
                   <div className="in">
-                       <h4> Donor List</h4>
+                       <h4>Donor List</h4>
                         <ul className="collection">
                          {donorList}
                        </ul>

@@ -8,9 +8,9 @@ class RecipientReport extends Component{
     state = { selectedFile: null }
 
     fileChangedHandler = event => {
-        this.setState({ selectedFile: event.target.files[0] })
+        this.setState({ selectedFile: event.target.value })
       }
-
+    
     updateRecipient(updateRecipient) {
         axios.request({
             method:'post',
@@ -18,6 +18,7 @@ class RecipientReport extends Component{
             data: updateRecipient
           }).then(response => {
             console.log("done");
+            this.props.history.push('/recipienthome');
           }).catch(err => console.log(err));
     }
 
@@ -25,32 +26,66 @@ class RecipientReport extends Component{
         const updateRecipient = {
             "$class": "org.organ.net.recipientReportPrepared",
             hash: btoa(this.state.selectedFile),
-            recipient: "resource:org.organ.net.Recipient#"+this.refs.Recipient_id.value
+            url: this.state.selectedFile,
+            location: "loc",
+            age: parseInt(this.refs.age.value),
+            sex: this.refs.sex.value,
+            bloodGroup: this.refs.bloodGroup.value,
+            dimensions: this.refs.dimensions.value,
+            dueDate: this.refs.dueDate.value,
+            organName: localStorage.organ,
+            got_organ: false,
+            recipient: "resource:org.organ.net.Recipient#"+localStorage.ptspotter_recipientId,
         }
 
          this.updateRecipient(updateRecipient);      
-         this.refs.Recipient_id.value="";
             e.preventDefault();
     }
 
     render() {
         return (
             <div>
-            <div className="Nav">
+            <div className="Nav"   style={{ marginBottom: "-30px" }}>
                <Navigation/>
                </div>
                <div className="inlogin">
+               <div>
+                <h1>
+                Recipient Report
+                </h1>
+                <p>
+                Please enter recipient's medical and physiological details:
+                </p>
+            </div>
+
                 <form onSubmit={this.onSubmit.bind(this)} action="#">
-                    <div className="input-field">
-                        <input type="text" name="Recipient_id" ref="Recipient_id"/>
-                        <label htmlFor="Recipient_id">Recipient ID</label>
+                   <div className="input-field">
+                       <input type="text" name="age" ref="age" />
+                       <label htmlFor="age">Age</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="bloodGroup" ref="bloodGroup" />
+                       <label htmlFor="bloodGroup">Blood Group</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="sex" ref="sex" />
+                       <label htmlFor="sex">Sex</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="dimensions" ref="dimensions" />
+                       <label htmlFor="dimensions">Dimensions</label>
+                   </div>
+                   <div className="input-field">
+                       <input type="text" name="dueDate" ref="dueDate" />
+                       <label htmlFor="dueDate">Due Date</label>
+                   </div>
+
+                   <div className="input-field">
+                      <input type="text" name="image" ref="image" onChange={this.fileChangedHandler.bind(this)} />
+                      <label htmlFor="image">Recipient Report URL</label>
                     </div>
 
-                    <div style={{textAlign:"left"}}>
-                    <input type="file" onChange={this.fileChangedHandler} />
-                    </div>
-
-                    <br /> <div style={{marginTop: "50px" }}><input type="submit" value="Invoke Transaction" className="btn" /></div>
+                    <br /> <div style={{marginTop: "5px" }}><input type="submit" value="Submit Recipient Report" className="btn" /></div>
                 </form>
              </div>
             </div>

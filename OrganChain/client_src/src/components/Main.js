@@ -16,6 +16,9 @@ import DonorHome from './DonorHome';
 import RecipientHome from './RecipientHome';
 import Historian from './Historian';
 import ReportDisplay from './ReportDisplay';
+import ShowProspectiveRecipients from './ShowProspectiveRecipients';
+import ShowProspectiveDonors from './ShowProspectiveDonors';
+import TransferRecords from './TransferRecords';
 
 const Main = () => (
     <main>
@@ -36,6 +39,9 @@ const Main = () => (
             <Route exact path='/recipienthome' component={RecipientHome}/>
             <Route exact path='/historian' component={Historian}/>
             <Route exact path='/:id/report' component={ReportDisplay}/>
+            <Route exact path='/showProspectiveRecipients' component={ShowProspectiveRecipients}/>
+            <Route exact path='/showProspectiveDonors' component={ShowProspectiveDonors} />
+            <Route exact path='/transferRecords' component={TransferRecords} />
         </Switch>
     </main>
 )

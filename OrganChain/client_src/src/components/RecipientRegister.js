@@ -33,24 +33,30 @@ class RecipientRegister extends Component{
         .catch(err => console.log(err));
       }
 
-    addRecipientOrgan(newRecipientOrgan) {
+    addRecipientOrgan(newRecipientOrgan, newUser) {
         axios.request({
             method:'post',
             url:'http://localhost:3000/api/recipientRegister',
             data: newRecipientOrgan
           }).then(response => {
 
+            console.log("response 1 is: ");
+            console.log(response);
+            axios.request({
+                method:'post',
+                url:'http://localhost:3000/api/Users',
+                data: newUser
+              }).then(response => {
+                console.log("response 2 is: ");
+                console.log(response);
+                 this.props.history.push('/hospital/recipientreport');
+              }).catch(err => console.log(err));
+
           }).catch(err => console.log(err));
     }
 
-    addUser(newUser) {
-        axios.request({
-            method:'post',
-            url:'http://localhost:3000/api/Users',
-            data: newUser
-          }).then(response => {
-             this.props.history.push('/login');
-          }).catch(err => console.log(err));
+    generateRandomString() {
+        return "     ".replaceAll(" ",()=>"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".charAt(Math.random()*62)) + "@email.com";
     }
 
     onSubmit(e){
@@ -68,24 +74,22 @@ class RecipientRegister extends Component{
 
         const newRecipientOrgan = {
             "$class": "org.organ.net.recipientRegister",
-            adharID:"RECIPIENT"+this.refs.recipient_id.value,
-            fname: this.refs.fname.value,
-            lname: this.refs.lname.value,
-            age: this.refs.age.value,
-            address: this.refs.address.value,
-            contact: this.refs.contact.value,
-            email: this.refs.email.value,
-            organName: arr,
+            recipientId:"RECIPIENT"+this.refs.recipient_id.value,
+            organName: arr[0],
             hospital:this.refs.hospital.value
         }
 
         const newUser = {
             username: "RECIPIENT"+this.refs.recipient_id.value,
-            email: this.refs.email.value,
+            email: this.generateRandomString(),
             password: this.refs.password.value
         }
-        this.addRecipientOrgan(newRecipientOrgan);
-        this.addUser(newUser);        
+
+        localStorage.setItem("organ", arr[0]); 
+        localStorage.ptspotter_recipientId = "RECIPIENT" + this.refs.recipient_id.value;
+
+        
+        this.addRecipientOrgan(newRecipientOrgan, newUser);        
         e.preventDefault();
     }
 
@@ -99,11 +103,6 @@ class RecipientRegister extends Component{
     }
 
     render() {
-        const hospitalList = this.state.hospitals.map((hospital, i) => {
-            return(
-              <HospitalList key={hospital.hospitalId} item={hospital} />
-            )
-        })
         return (
             <div>
             <div className="Nav">
@@ -111,35 +110,20 @@ class RecipientRegister extends Component{
                  </div>
                 <div className="register-box">
                 
+                               
+                <div style={{ textAlign: "center" }}>
+                    <h1>
+                    Recipient Registration
+                    </h1>
+                    <p>
+                    Please enter the recipient account details:
+                    </p>
+                </div>
 
                <form onSubmit={this.onSubmit.bind(this)} action="#">
                    <div className="input-field">
                        <input type="text" name="recipient_id" ref="recipient_id"/>
-                       <label htmlFor="recipient_id">Adhaar ID</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="fname" ref="fname" />
-                       <label htmlFor="fname">First Name</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="lname" ref="lname" />
-                       <label htmlFor="lname">Last Name</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="age" ref="age" />
-                       <label htmlFor="age">Age</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="address" ref="address" />
-                       <label htmlFor="address">Address</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="contact" ref="contact" />
-                       <label htmlFor="contact">Contact</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="email" name="email" ref="email" />
-                       <label htmlFor="email">Email</label>
+                       <label htmlFor="recipient_id">Recipient ID</label>
                    </div>
                    <div className="input-field">
                        <input type="password" name="password" ref="password" />
@@ -178,14 +162,8 @@ class RecipientRegister extends Component{
                        </label><br />
 
                        <div className="input-field">
-                       <input type="text" name="hospital" ref="hospital" />
-                       <label htmlFor="hospital">Hospital</label>
-                       </div>
-
-                       <div>
-                           <ul className="collection" >
-                           {hospitalList}
-                           </ul>
+                       <input type="text" name="hospital" ref="hospital" value={localStorage.ptspotter_hospitalId} disabled />
+                       <label htmlFor="hospital">Hospital ID</label>
                        </div>
 
                    

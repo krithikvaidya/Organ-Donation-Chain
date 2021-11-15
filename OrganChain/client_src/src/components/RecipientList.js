@@ -10,7 +10,9 @@ class RecipientList extends Component{
     
     render () {
         return(
-            <li className="collection-item"> Recipient ID : {this.state.item.adharID} <br />Name : {this.state.item.firstName + " " + this.state.item.lastName}</li>
+            <li className="collection-item"> Recipient ID: {this.state.item.recipientId} <br />
+            Organ: {this.state.item.organName} 
+            <br />Got Organ: {this.state.item.got_organ === true ? "true" : "false"}</li>
         )
     }
 }

@@ -21,6 +21,24 @@
       "required": false,
       "description": "The class identifier for this type"
     },
+    "candidates": {
+      "type": [
+        "string"
+      ],
+      "required": true
+    },
+    "Description": {
+      "type": "string",
+      "required": false
+    },
+    "donorId": {
+      "type": "string",
+      "required": true
+    },
+    "recipientId": {
+      "type": "string",
+      "required": true
+    },
     "organ": {
       "type": "any",
       "description": "The identifier of an instance of organ",

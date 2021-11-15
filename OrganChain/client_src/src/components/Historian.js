@@ -16,7 +16,7 @@ class Historian extends Component{
     }
 
     getHistorian(){
-        axios.get('http://localhost:3002/api/system/historian')
+        axios.get('http://localhost:3001/api/system/historian')
           .then(response => {
 
             var historianList = response.data;

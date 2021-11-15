@@ -6,6 +6,9 @@ import './../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom';
 import {Navigation} from './components/Navbar';
 
+// Importing the Bootstrap CSS
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
   return (
     <BrowserRouter>

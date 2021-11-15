@@ -23,6 +23,10 @@ class DonorRegister extends Component{
         this.getHospitals();
     }
 
+    generateRandomString() {
+        return "     ".replaceAll(" ",()=>"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".charAt(Math.random()*62)) + "@email.com";
+    }
+    
     getHospitals(){
         axios.get('http://localhost:3000/api/Hospital')
           .then(response => {
@@ -33,24 +37,26 @@ class DonorRegister extends Component{
         .catch(err => console.log(err));
       }
 
-    addDonorOrgan(newDonorOrgan) {
+    addDonorOrgan(newDonorOrgan, newUser) {
         axios.request({
             method:'post',
             url:'http://localhost:3000/api/donorOrganRegister',
             data: newDonorOrgan
           }).then(response => {
-
+              console.log("Response is: ");
+              console.log(response);
+            axios.request({
+                method:'post',
+                url:'http://localhost:3000/api/Users',
+                data: newUser
+              }).then(response => {
+                 this.props.history.push('/hospital/organTestedReport');
+              }).catch(err => console.log(err));
           }).catch(err => console.log(err));
     }
 
     addUser(newUser) {
-        axios.request({
-            method:'post',
-            url:'http://localhost:3000/api/Users',
-            data: newUser
-          }).then(response => {
-             this.props.history.push('/login');
-          }).catch(err => console.log(err));
+        
     }
 
     onSubmit(e){
@@ -68,23 +74,21 @@ class DonorRegister extends Component{
 
         const newDonorOrgan = {
             "$class": "org.organ.net.donorOrganRegister",
-            adharID: "DONOR"+this.refs.donor_id.value,
-            fname: this.refs.fname.value,
-            lname: this.refs.lname.value,
-            age: this.refs.age.value,
-            address: this.refs.address.value,
-            contact: this.refs.contact.value,
-            email: this.refs.email.value,
-            name: arr,
+            donorId: "DONOR"+this.refs.donor_id.value,
+            name: arr[0],
             hospital:this.refs.hospital.value
         }
 
         const newUser = {
             username: "DONOR"+this.refs.donor_id.value,
-            email: this.refs.email.value,
+            email: this.generateRandomString(),
             password: this.refs.password.value
         }
-        this.addDonorOrgan(newDonorOrgan);
+
+        localStorage.setItem("organ", arr[0]); 
+        localStorage.ptspotter_donorId = "DONOR" + this.refs.donor_id.value;
+
+        this.addDonorOrgan(newDonorOrgan, newUser);
         this.addUser(newUser);        
         e.preventDefault();
     }
@@ -99,11 +103,6 @@ class DonorRegister extends Component{
     }
 
     render() {
-        const hospitalList = this.state.hospitals.map((hospital, i) => {
-            return(
-              <HospitalList key={hospital.hospitalId} item={hospital} />
-            )
-        })
         return (
             
             <div>
@@ -112,41 +111,24 @@ class DonorRegister extends Component{
                 </div>
                 <div className="register-box">
                
+                <div style={{ textAlign: "center" }}>
+                    <h1>
+                    Donor Registration
+                    </h1>
+                    <p>
+                    Please enter the donor account details:
+                    </p>
+                </div>
 
                <form onSubmit={this.onSubmit.bind(this)} action="#">
                    <div className="input-field" >
                        <input type="text" name="donor_id" ref="donor_id"/>
-                       <label htmlFor="donor_id">Adhaar ID</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="fname" ref="fname" />
-                       <label htmlFor="fname">First Name</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="lname" ref="lname" />
-                       <label htmlFor="lname">Last Name</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="age" ref="age" />
-                       <label htmlFor="age">Age</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="address" ref="address" />
-                       <label htmlFor="address">Address</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="text" name="contact" ref="contact" />
-                       <label htmlFor="contact">Contact</label>
-                   </div>
-                   <div className="input-field">
-                       <input type="email" name="email" ref="email" />
-                       <label htmlFor="email">Email</label>
+                       <label htmlFor="donor_id">Unique Donor ID</label>
                    </div>
                    <div className="input-field">
                        <input type="password" name="password" ref="password" />
                        <label htmlFor="password">Password</label>
                    </div>
-
                    <label>
                            <input type="checkbox" name="EYE" 
                            checked={this.state.organName['EYE']}
@@ -179,14 +161,8 @@ class DonorRegister extends Component{
                        </label><br />
 
                        <div className="input-field">
-                       <input type="text" name="hospital" ref="hospital"/>
-                       <label htmlFor="hospital">Hospital</label>
-                       </div>
-
-                       <div>
-                           <ul className="collection" >
-                           {hospitalList}
-                           </ul>
+                        <input type="text" name="hospital" ref="hospital" value={localStorage.ptspotter_hospitalId} disabled/>
+                        <label htmlFor="hospital">Hospital ID</label>
                        </div>
 
                        <br /><input type="submit" value="Register" className="btn" />
